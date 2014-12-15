@@ -1,0 +1,108 @@
+﻿     
+<html>
+<head>
+</head>
+<body>
+	<canvas id="fireworksCanvas">
+
+</body>
+</html>
+ 
+
+
+<script>
+    
+	
+    
+
+    
+    
+    function firework() {
+
+        var that = {};
+
+		var fireworkSound = new Audio('smb_fireworks.wav');    
+		var sprites = new Image();
+		sprites.src = 'SMB_Object_Sprites.png'		
+		
+		var canvas = document.getElementById('fireworksCanvas');
+        var context = canvas.getContext('2d');
+        
+        var drawX = 10; 
+        var drawY = 15;
+
+
+        var frameIndex = 0;
+        var frames = 4;
+        var tickCount = 0;
+        var ticksPerFrame = 10;
+
+        var widthHeight = 16;
+        var spritStartX = 112;
+        var spritStartY = 144;
+
+        var animate = false;
+        
+        that.start = function () {
+            animate = true;
+            that.render();
+        }
+
+        that.stop = function () {
+            animate = false;
+            tickCount = 0;
+            frameIndex = 0;
+        }
+
+        that.render = function () {
+
+            
+
+            if (tickCount == 0) {
+                fireworkSound.play();
+            }
+
+            context.clearRect(0, 0, canvas.width, canvas.height);
+
+            context.drawImage(sprites,
+                    spritStartX, //pixelsLeft,
+                    spritStartY + (widthHeight * frameIndex), //pixelsTop,
+                    widthHeight, //spriteWidth,
+                    widthHeight, //spriteHeight,
+                    drawX, //canvasPosX,
+                    drawY, //canvasPosY,
+                    widthHeight, //spriteWidth,
+                    widthHeight//spriteHeight
+                );
+
+
+            tickCount++;
+            if (tickCount > frameIndex * ticksPerFrame) {
+
+                if (frameIndex == frames) {
+                    frameIndex = 0;
+                    tickCount = 0;
+                    drawX = Math.floor((Math.random() * (canvas.width - 16)) + 0);
+                    drawY = Math.floor((Math.random() * (canvas.height - 16)) + 0);
+                }
+                else {
+                    frameIndex++;
+                }
+            }
+
+
+            if (animate) {
+                window.requestAnimationFrame(that.render);
+            }
+        };
+
+        
+        return that;
+       
+    }
+
+
+	var fireworks = firework();
+	fireworks.start();
+
+</script>
